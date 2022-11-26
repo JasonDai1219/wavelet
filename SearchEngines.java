@@ -2,35 +2,34 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 
-class Handler1 implements URLHandler {
+class Search implements URLHandler {
     // The one bit of state on the server: a number that will be manipulated by
     // various requests.
-    int num = 0;
+    ArrayList<String> Store_list = new ArrayList<>();
 
     public String handleRequest(URI url) {
         if (url.getPath().equals("/")) {
-            return String.format("Number: %s", num);
-        } else if (url.getPath().equals("/increment")) {
-            num += 1;
-            return String.format("Number incremented!");
-        } else {
+            return store_list1.toString();
+        }
+        else {
             System.out.println("Path: " + url.getPath());
             if (url.getPath().contains("/search")) {
-                String[] parameters1 = url.getQuery().split("=");
-                String empty = "";
-                ArrayList<String> store_list = new ArrayList<String>();
-                for(String i: store_list) {
-                    if(i.contains(parameters1[1])) {
-                        empty = empty + i;
+                ArrayList<String> store_list2 = new ArrayList<String>();
+                String[] elements = url.getQuery().split("=");
+                if(elements[0].equals("s")) {
+                    for(String s: stringList) {
+                        if (s.toUpperCase().contains(elements[1].toUpperCase())) {
+                            store_list2.add(s);
+                        }
                     }
+                    return store_list2.toString();
                 }
-                return empty;
             }
-            if (url.getPath().contains("/add")) {
-                String[] parameters = url.getQuery().split("=");
-                if (parameters[0].equals("s")) {
-                    num += Integer.parseInt(parameters[1]);
-                    return String.format("Number increased by %s! It's now %d", parameters[1], num);
+            elif (url.getPath().contains("/add")) {
+                String[] store_list3 = url.getQuery().split("=");
+                if (store_list3[0].equals("s")) {
+                    store_list1.add(store_list3[1]);
+                    return store_list.toString();
                 }
                 ArrayList<String> store_list = new ArrayList<String>();
                 store_list.add(parameters[1]);
@@ -40,13 +39,9 @@ class Handler1 implements URLHandler {
             return "404 Not Found!";
         }
     }
-
-    public String Search(String x) {
-        
-    }
 }
 
-class NumberServer {
+class SearchEngine {
     public static void main(String[] args) throws IOException {
         if(args.length == 0){
             System.out.println("Missing port number! Try any number between 1024 to 49151");
@@ -55,6 +50,6 @@ class NumberServer {
 
         int port = Integer.parseInt(args[0]);
 
-        Server.start(port, new Handler1());
+        Server.start(port, new Search());
     }
 }
